@@ -29,6 +29,29 @@ router.get('/', async (req, res) => {
         });
 });
 
+router.get('/js', async (req, res) => {
+    const data = await Todo.findByJS();
+    res.status(200).json({
+        data,
+    });
+});
+
+router.get('/language', async (req, res) => {
+    const data = await Todo.find().byLanguage('react');
+    res.status(200).json({
+        data,
+    });
+});
+
+// GET ACTIVE TODOS
+router.get('/active', async (req, res) => {
+    const todo = new Todo();
+    const data = await todo.findActive();
+    res.status(200).json({
+        data,
+    });
+});
+
 // GET A TODO by ID
 router.get('/:id', async (req, res) => {
     await Todo.find({ _id: req.params.id })
@@ -85,7 +108,7 @@ router.post('/all', async (req, res) => {
 
 // PUT TODO
 router.put('/:id', async (req, res) => {
-    const result = await Todo.findByIdAndUpdate(
+    await Todo.findByIdAndUpdate(
         { _id: req.params.id },
         { $set: { status: 'active' } },
         { new: true, useFindAndModify: false },
